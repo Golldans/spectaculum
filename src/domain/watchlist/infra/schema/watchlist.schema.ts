@@ -9,7 +9,6 @@ export class WatchlistSchema {
     })
     id: number;
 
-
     @CreateDateColumn({
         name: "created_at",
         type: "timestamp",

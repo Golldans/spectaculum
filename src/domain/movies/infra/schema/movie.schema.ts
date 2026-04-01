@@ -7,22 +7,29 @@ export class MovieSchema {
     @PrimaryGeneratedColumn({
         name: "id",
     })
-    id: number;
+    id?: number;
 
+    @Column({
+        name: "name",
+        type: "varchar",
+        length: 255,
+        nullable: false,
+    })
+    name: string;
 
     @CreateDateColumn({
         name: "created_at",
         type: "timestamp",
         nullable: false,
     })
-    createdAt: Date;
+    createdAt?: Date;
 
     @UpdateDateColumn({
         name: "updated_at",
         type: "timestamp",
         nullable: false,
     })
-    updatedAt: Date;
+    updatedAt?: Date;
 
     @DeleteDateColumn({
         name: "deleted_at",
