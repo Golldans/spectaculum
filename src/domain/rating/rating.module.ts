@@ -1,7 +1,11 @@
 import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { RatingSchema } from "./infra/schema/rating.schema";
 
 @Module({
-    imports: [],
+    imports: [TypeOrmModule.forFeature([
+        RatingSchema,
+    ])],
     providers: [],
     exports: [],
 })

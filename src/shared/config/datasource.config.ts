@@ -2,7 +2,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { getEnv } from "../utils/env";
 import { EnvironmentsEnum } from "../enums/environments.enum";
 
-export const datasourceConfigModule = TypeOrmModule.forRootAsync({
+export const DatasourceConfigModule = TypeOrmModule.forRootAsync({
     useFactory: () => ({
         type: 'mysql',
         host: getEnv('DB_HOST'),
@@ -11,6 +11,7 @@ export const datasourceConfigModule = TypeOrmModule.forRootAsync({
         password: getEnv('DB_PASSWORD'),
         database: getEnv('DB_SCHEMA'),
         entities: [__dirname + '/../**/schema/*.schema.{ts,js}'],
+        autoLoadEntities: true,
         synchronize: getEnv('ENV') !== EnvironmentsEnum.PRODUCTION,
     }),
 })
