@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
+import { datasourceConfigModule } from './shared/config/datasource.config';
 
 @Module({
-  imports: [],
+  imports: [datasourceConfigModule],
   controllers: [],
   providers: [],
 })
