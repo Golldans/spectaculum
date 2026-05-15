@@ -9,6 +9,7 @@ export const envSchema = z.object({
     DB_PASSWORD: z.string().nonempty(),
     ENV: z.enum(EnvironmentsEnum).default(EnvironmentsEnum.DEVELOPMENT),
     PORT: z.string().regex(/^\d+$/, "PORT must be a number").optional(),
+    JWT_SECRET: z.string().nonempty(),
 });
 
 
