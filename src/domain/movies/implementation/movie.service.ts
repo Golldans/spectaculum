@@ -30,9 +30,33 @@ interface OmdbMovieDetailResponse {
     Response: 'True' | 'False';
 }
 
+const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hora
+
+interface CacheEntry<T> {
+    data: T;
+    expiresAt: number;
+}
+
 @Injectable()
 export class MovieService {
+    private readonly searchCache = new Map<string, CacheEntry<MovieCoverSuggestionDto[]>>();
+    private readonly detailCache = new Map<string, CacheEntry<OmdbMovieDetailResponse>>();
+
     constructor(private readonly movieRepository: MovieRepository) {}
+
+    private cacheGet<T>(map: Map<string, CacheEntry<T>>, key: string): T | null {
+        const entry = map.get(key);
+        if (!entry) return null;
+        if (Date.now() > entry.expiresAt) {
+            map.delete(key);
+            return null;
+        }
+        return entry.data;
+    }
+
+    private cacheSet<T>(map: Map<string, CacheEntry<T>>, key: string, data: T): void {
+        map.set(key, { data, expiresAt: Date.now() + CACHE_TTL_MS });
+    }
 
     findAll(name?: string) {
         return this.movieRepository.findAll(name ? { name } : undefined);
@@ -65,12 +89,17 @@ export class MovieService {
     }
 
     private async fetchOmdbById(imdbId: string): Promise<OmdbMovieDetailResponse | null> {
+        const cached = this.cacheGet(this.detailCache, imdbId);
+        if (cached) return cached;
+
         const response = await fetch(
             `https://www.omdbapi.com/?apikey=${this.omdbApiKey}&i=${encodeURIComponent(imdbId)}`,
         );
         if (!response.ok) return null;
         const data = (await response.json()) as OmdbMovieDetailResponse;
         if (data.Response !== 'True') return null;
+
+        this.cacheSet(this.detailCache, imdbId, data);
         return data;
     }
 
@@ -85,6 +114,10 @@ export class MovieService {
 
         const cleanYear = year?.trim();
         const hasYear = Boolean(cleanYear);
+
+        const cacheKey = `${query}|${cleanYear ?? ''}`;
+        const cachedSuggestions = this.cacheGet(this.searchCache, cacheKey);
+        if (cachedSuggestions) return cachedSuggestions;
 
         const params = new URLSearchParams({
             apikey: this.omdbApiKey,
@@ -120,6 +153,7 @@ export class MovieService {
             }),
         );
 
+        this.cacheSet(this.searchCache, cacheKey, detailed);
         return detailed;
     }
 
