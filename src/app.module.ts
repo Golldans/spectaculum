@@ -9,9 +9,10 @@ import { MoviesModule } from './domain/movies/movies.module';
 import { RatingModule } from './domain/rating/rating.module';
 import { UsersModule } from './domain/users/users.module';
 import { WatchListModule } from './domain/watchlist/watchlist.module';
+import { ScreeningsModule } from './domain/screenings/screenings.module';
 
 @Module({
-  imports: [DatasourceConfigModule, AuthModule, CinemasModule, CommentsModule, ListsModule, LogsModule, MoviesModule, RatingModule, UsersModule, WatchListModule],
+  imports: [DatasourceConfigModule, AuthModule, CinemasModule, CommentsModule, ListsModule, LogsModule, MoviesModule, RatingModule, UsersModule, WatchListModule, ScreeningsModule],
   controllers: [],
   providers: [],
 })

@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { UserSchema } from '../../../users/infra/schema/user.schema';
 
 @Entity({ name: "comment" })
 export class CommentSchema {
@@ -13,6 +14,10 @@ export class CommentSchema {
 
     @Column({ name: "movie_id", type: "int", nullable: false })
     movieId: number;
+
+    @ManyToOne(() => UserSchema, { nullable: false })
+    @JoinColumn({ name: 'user_id' })
+    user?: UserSchema;
 
     @CreateDateColumn({ name: "created_at", type: "timestamp", nullable: false })
     createdAt: Date;

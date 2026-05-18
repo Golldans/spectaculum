@@ -17,6 +17,37 @@ export class MovieSchema {
     })
     name: string;
 
+    @Column({
+        name: 'cover_url',
+        type: 'varchar',
+        length: 1000,
+        nullable: true,
+    })
+    coverUrl?: string;
+
+    @Column({
+        name: 'year',
+        type: 'varchar',
+        length: 20,
+        nullable: true,
+    })
+    year?: string;
+
+    @Column({
+        name: 'plot',
+        type: 'text',
+        nullable: true,
+    })
+    plot?: string;
+
+    @Column({
+        name: 'imdb_id',
+        type: 'varchar',
+        length: 32,
+        nullable: true,
+    })
+    imdbId?: string;
+
     @CreateDateColumn({
         name: "created_at",
         type: "timestamp",

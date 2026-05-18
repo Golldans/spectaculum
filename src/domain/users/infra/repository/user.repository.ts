@@ -35,6 +35,19 @@ export class UserRepository {
             .getOne();
     }
 
+    async findPublicByIds(ids: number[]): Promise<Array<{ id: number; username: string }>> {
+        if (!ids.length) return [];
+
+        const users = await this.userRepository
+            .createQueryBuilder('user')
+            .withDeleted()
+            .select(['user.id', 'user.username'])
+            .where('user.id IN (:...ids)', { ids })
+            .getMany();
+
+        return users.map((user) => ({ id: user.id, username: user.username }));
+    }
+
     async addFriend(userId: number, friendId: number): Promise<void> {
         const user = await this.userRepository.findOne({ where: { id: userId }, relations: ['friends'] });
         const friend = await this.userRepository.findOne({ where: { id: friendId } });
