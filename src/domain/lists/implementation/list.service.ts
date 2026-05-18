@@ -5,6 +5,12 @@ import { ListRepository } from '../infra/repository/list.repository';
 export class ListService {
     constructor(private readonly listRepository: ListRepository) {}
 
+    private async assertOwner(listId: number, userId: number) {
+        const list = await this.listRepository.findOne(listId);
+        if (!list) throw new NotFoundException('Lista não encontrada');
+        if (list.userId !== userId) throw new ForbiddenException('Você não tem permissão para alterar esta lista');
+    }
+
     findAll(userId?: number) {
         return this.listRepository.findAll(userId);
     }
@@ -19,25 +25,29 @@ export class ListService {
         return this.listRepository.create({ name, userId });
     }
 
-    async update(id: number, name: string) {
+    async update(id: number, name: string, userId: number) {
+        await this.assertOwner(id, userId);
         const list = await this.listRepository.update(id, name);
         if (!list) throw new NotFoundException('Lista não encontrada');
         return list;
     }
 
-    async addMovie(listId: number, movieId: number) {
+    async addMovie(listId: number, movieId: number, userId: number) {
+        await this.assertOwner(listId, userId);
         const list = await this.listRepository.addMovie(listId, movieId);
         if (!list) throw new NotFoundException('Lista ou filme não encontrado');
         return list;
     }
 
-    async removeMovie(listId: number, movieId: number) {
+    async removeMovie(listId: number, movieId: number, userId: number) {
+        await this.assertOwner(listId, userId);
         const list = await this.listRepository.removeMovie(listId, movieId);
         if (!list) throw new NotFoundException('Lista não encontrada');
         return list;
     }
 
-    async remove(id: number) {
+    async remove(id: number, userId: number) {
+        await this.assertOwner(id, userId);
         const deleted = await this.listRepository.softDelete(id);
         if (!deleted) throw new NotFoundException('Lista não encontrada');
         return { message: 'Lista removida' };

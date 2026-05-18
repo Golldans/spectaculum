@@ -18,20 +18,20 @@ export class ListController {
 
     @UseGuards(JwtAuthGuard)
     @Post()
-    create(@Body('name') name: string, @Body('userId') userId: number) {
-        return this.listService.create(name, userId);
+    create(@Body('name') name: string, @Req() req: any) {
+        return this.listService.create(name, req.user.id);
     }
 
     @UseGuards(JwtAuthGuard)
     @Put(':id')
-    update(@Param('id', ParseIntPipe) id: number, @Body('name') name: string) {
-        return this.listService.update(id, name);
+    update(@Param('id', ParseIntPipe) id: number, @Body('name') name: string, @Req() req: any) {
+        return this.listService.update(id, name, req.user.id);
     }
 
     @UseGuards(JwtAuthGuard)
     @Post(':id/movies')
-    addMovie(@Param('id', ParseIntPipe) id: number, @Body('movieId') movieId: number) {
-        return this.listService.addMovie(id, movieId);
+    addMovie(@Param('id', ParseIntPipe) id: number, @Body('movieId') movieId: number, @Req() req: any) {
+        return this.listService.addMovie(id, movieId, req.user.id);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -39,14 +39,15 @@ export class ListController {
     removeMovie(
         @Param('id', ParseIntPipe) id: number,
         @Param('movieId', ParseIntPipe) movieId: number,
+        @Req() req: any,
     ) {
-        return this.listService.removeMovie(id, movieId);
+        return this.listService.removeMovie(id, movieId, req.user.id);
     }
 
     @UseGuards(JwtAuthGuard)
     @Delete(':id')
-    remove(@Param('id', ParseIntPipe) id: number) {
-        return this.listService.remove(id);
+    remove(@Param('id', ParseIntPipe) id: number, @Req() req: any) {
+        return this.listService.remove(id, req.user.id);
     }
 
     // --- Ratings ---
@@ -92,6 +93,4 @@ export class ListController {
     ) {
         return this.listService.removeComment(commentId, req.user.id);
     }
-}
-
 }
