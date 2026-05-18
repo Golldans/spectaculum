@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { MovieSchema } from '../../../movies/infra/schema/movie.schema';
+import { UserSchema } from '../../../users/infra/schema/user.schema';
 
 @Entity({ name: "list" })
 export class ListSchema {
@@ -11,6 +12,10 @@ export class ListSchema {
 
     @Column({ name: "user_id", type: "int", nullable: false })
     userId: number;
+
+    @ManyToOne(() => UserSchema)
+    @JoinColumn({ name: 'user_id' })
+    user?: UserSchema;
 
     @ManyToMany(() => MovieSchema)
     @JoinTable({

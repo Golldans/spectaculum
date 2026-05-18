@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { ListRepository } from '../infra/repository/list.repository';
 
 @Injectable()
@@ -41,5 +41,31 @@ export class ListService {
         const deleted = await this.listRepository.softDelete(id);
         if (!deleted) throw new NotFoundException('Lista não encontrada');
         return { message: 'Lista removida' };
+    }
+
+    // --- Ratings ---
+
+    getRatings(listId: number) {
+        return this.listRepository.findRatings(listId);
+    }
+
+    rateList(listId: number, userId: number, score: number) {
+        return this.listRepository.upsertRating(listId, userId, score);
+    }
+
+    // --- Comments ---
+
+    getComments(listId: number) {
+        return this.listRepository.findComments(listId);
+    }
+
+    addComment(listId: number, userId: number, content: string) {
+        return this.listRepository.createComment(listId, userId, content);
+    }
+
+    async removeComment(commentId: number, userId: number) {
+        const deleted = await this.listRepository.deleteComment(commentId, userId);
+        if (!deleted) throw new ForbiddenException('Comentário não encontrado ou sem permissão');
+        return { message: 'Comentário removido' };
     }
 }
