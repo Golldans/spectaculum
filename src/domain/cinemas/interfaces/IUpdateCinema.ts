@@ -2,6 +2,11 @@ export interface IUpdateCinema {
     id: number;
     name?: string;
     location?: string;
-    startTime?: Date;
-    endTime?: Date;
+    cep?: string;
+    street?: string;
+    number?: string;
+    neighborhood?: string;
+    city?: string;
+    state?: string;
+    complement?: string;
 }

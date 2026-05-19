@@ -26,18 +26,60 @@ export class CinemaSchema {
     location: string;
 
     @Column({
-        name: "start_time",
-        type: "timestamp",
-        nullable: false,
+        name: 'cep',
+        type: 'varchar',
+        length: 8,
+        nullable: true,
     })
-    startTime: Date;
+    cep?: string;
 
     @Column({
-        name: "end_time",
-        type: "timestamp",
-        nullable: false,
+        name: 'street',
+        type: 'varchar',
+        length: 255,
+        nullable: true,
     })
-    endTime: Date;
+    street?: string;
+
+    @Column({
+        name: 'number',
+        type: 'varchar',
+        length: 20,
+        nullable: true,
+    })
+    number?: string;
+
+    @Column({
+        name: 'neighborhood',
+        type: 'varchar',
+        length: 120,
+        nullable: true,
+    })
+    neighborhood?: string;
+
+    @Column({
+        name: 'city',
+        type: 'varchar',
+        length: 120,
+        nullable: true,
+    })
+    city?: string;
+
+    @Column({
+        name: 'state',
+        type: 'varchar',
+        length: 2,
+        nullable: true,
+    })
+    state?: string;
+
+    @Column({
+        name: 'complement',
+        type: 'varchar',
+        length: 255,
+        nullable: true,
+    })
+    complement?: string;
 
     @CreateDateColumn({
         name: "created_at",
